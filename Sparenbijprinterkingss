@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sparen bij Printkingss - Scanner</title>
+    <!-- We gebruiken de gratis Html5-Qrcode bibliotheek -->
+    <script src="https://unpkg.com" type="text/javascript"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            color: #00ff88;
+            margin-bottom: 5px;
+        }
+        p {
+            color: #aaaaaa;
+            font-size: 14px;
+        }
+        #scanner-container {
+            max-width: 500px;
+            margin: 20px auto;
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border: 2px solid #333;
+        }
+        #reader {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        #resultaat-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            border-left: 5px solid #00ff88;
+            display: none;
+        }
+        .code-tekst {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00ff88;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>👑 Sparen bij Printkingss 👑</h1>
+    <p>Hou je barcode of QR-code voor de frontcamera om te scannen!</p>
+
+    <div id="scanner-container">
+        <div id="reader"></div>
+    </div>
+
+    <div id="resultaat-box">
+        <h3>Code Gescand! 🎉</h3>
+        <p>Gescande waarde:</p>
+        <div class="code-tekst" id="gescande-code">...</div>
+        <p style="margin-top:10px; font-size:12px; color:#ffcc00;">Maak een screenshot en stuur deze naar de beheerder voor je punten!</p>
+    </div>
+
+    <script>
+        function onScanSuccess(decodedText, decodedResult) {
+            // Laat de resultaatbox zien
+            document.getElementById('resultaat-box').style.display = 'block';
+            // Zet de gescande tekst in het scherm
+            document.getElementById('gescande-code').innerText = decodedText;
+            
+            // Maak een leuk geluidje als dat lukt (optioneel)
+            console.log(`Code gescand: ${decodedText}`, decodedResult);
+        }
+
+        function onScanFailure(error) {
+            // We negeren foutjes tijdens het zoeken naar een barcode om het scherm rustig te houden
+        }
+
+        // Start de scanner en vraag om de FRONT camera
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader", 
+            { 
+                fps: 10, 
+                qrbox: {width: 250, height: 250},
+                // Dit zorgt ervoor dat hij op telefoons de selfie/frontcamera pakt:
+                facingMode: "user" 
+            },
+            /* verbose= */ false
+        );
+        
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    </script>
+
+</body>
+</html>
